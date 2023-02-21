@@ -4,14 +4,15 @@ const logger = new Logger({ debug: true });
 // const botConfig = require("../utils/botconfig.js");
 // const axios = require("axios");
 // const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js");
-// const cron = require("node-cron");
+const cron = require("node-cron");
 const Levels = require("discord.js-leveling");
+const qotd = require("../utils/qotd.js");
 
 module.exports = {
   name: "ready",
   once: true,
   async execute(client) {
-
+    const qotdClass = new qotd(client);
 
     console.clear();
     logger.info(`Logged in as ${client.user.tag}!`);
@@ -40,7 +41,9 @@ module.exports = {
 
     Levels.setURL(process.env.db);
 
-
+     cron.schedule("45 6 * * *", () => {
+      qotdClass.generateQuestion();
+    });
     
 
 
