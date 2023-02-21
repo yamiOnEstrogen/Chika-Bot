@@ -30,9 +30,16 @@ class qotd {
         this.client = client;
         this.qotdChannel = this.client.channels.cache.get(botConfig.qotdChannel); // ! Channel ID to send the question to
         this.aotdChannel = this.client.channels.cache.get(botConfig.aotdChannel); // ! Channel ID for users to answer the question
+        this.qotdRole = this.client.guilds.cache.get(botConfig.guildID).roles.cache.get(botConfig.qotdRole); // ! Role ID to ping when the question is sent
     }
 
     async generateQuestion() {
+        if (!this.client) throw new Error('No client provided'); // ! If there is no client provided, throw an error-
+        if (!this.qotdChannel) throw new Error('No channel provided (QOTD)'); // ! If there is no channel provided, throw an error
+        if (!this.aotdChannel) throw new Error('No channel provided (AOTD)'); // ! If there is no channel provided, throw an error
+        if (!this.qotdRole) throw new Error('No role provided'); // ! If there is no role provided, throw an error
+
+
         console.log('Generating question...');
         const options = {
             method: 'GET',
@@ -89,7 +96,7 @@ class qotd {
             .setColor('RANDOM')
             .setTimestamp();
 
-            this.qotdChannel.send({ embeds: [qotdEmbed] }).then((msg) => {
+            this.qotdChannel.send({ embeds: [qotdEmbed], content: `${this.qotdRole}` }).then((msg) => {
                 console.log('Question sent!');
                 const collector = new MessageCollector(this.aotdChannel, (m) => m.author.id !== this.client.user.id, { time: 1000 * 60 * 5 });
                 console.log('Message collector created!');
