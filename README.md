@@ -1,7 +1,7 @@
 
 # Chika Bot
 
-A Official Discord Bot For My Discord Server
+The Official Discord Bot For My Discord Server
 
 
 ## Authors
